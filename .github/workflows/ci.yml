@@ -10,8 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Print Hello
-        run: echo "GitHub Actions is working!"
+      # Install Miniconda and create the environment
+      - name: Setup Conda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: credit_fraud_detection
+          environment-file: environment.yml
+          auto-activate-base: false
+
+      # Verify Python version
+      - name: Check Python Version
+        shell: bash -l {0}
+        run: python --version
+
+      # Verify MLflow
+      - name: Check MLflow Version
+        shell: bash -l {0}
+        run: python -c "import mlflow; print('MLflow Version:', mlflow.__version__)"
+
+      # Verify Scikit-Learn
+      - name: Check Scikit-Learn
+        shell: bash -l {0}
+        run: python -c "import sklearn; print('Scikit-Learn Version:', sklearn.__version__)"
+
+      # Verify FastAPI
+      - name: Check FastAPI
+        shell: bash -l {0}
+        run: python -c "import fastapi; print('FastAPI Installed Successfully')"
