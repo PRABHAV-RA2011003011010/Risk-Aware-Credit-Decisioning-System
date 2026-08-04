@@ -31,3 +31,5 @@ Test Predict API:
   "merchant_risk_score": 22.5,
   "prior_disputes": 1
 }
+
+Start MLFlow : mlflow ui
