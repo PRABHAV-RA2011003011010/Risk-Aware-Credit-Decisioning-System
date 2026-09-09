@@ -1,7 +1,7 @@
 # Risk-Aware-Credit-Decisioning-System
 
 conda activate credit_fraud_detection
-
+uvicorn src.api.app:app --reload
 Test Predict API:
 {
   "amount_usd": 1250.50,

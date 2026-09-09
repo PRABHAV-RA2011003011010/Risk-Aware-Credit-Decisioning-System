@@ -1,20 +1,20 @@
-name: Credit Fraud CI
+name: Credit Fraud CI/CD
 
 on:
   push:
-    branches:
-      - main
+    paths:
+      - "models/**"   # Trigger only if models change
+      - "src/**"      # Or include app code changes too
+      - "tests/**"    # Run tests if test files change
 
 jobs:
-  test:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Install Miniconda and create the environment
       - name: Setup Conda
         uses: conda-incubator/setup-miniconda@v3
         with:
@@ -22,22 +22,21 @@ jobs:
           environment-file: environment.yml
           auto-activate-base: false
 
-      # Verify Python version
-      - name: Check Python Version
+      - name: Install Dependencies
         shell: bash -l {0}
-        run: python --version
+        run: |
+          pip install -r requirements.txt
+          pip install pytest
 
-      # Verify MLflow
-      - name: Check MLflow Version
+      - name: Run Tests
         shell: bash -l {0}
-        run: python -c "import mlflow; print('MLflow Version:', mlflow.__version__)"
+        run: pytest tests/ --maxfail=1 --disable-warnings -q
 
-      # Verify Scikit-Learn
-      - name: Check Scikit-Learn
-        shell: bash -l {0}
-        run: python -c "import sklearn; print('Scikit-Learn Version:', sklearn.__version__)"
-
-      # Verify FastAPI
-      - name: Check FastAPI
-        shell: bash -l {0}
-        run: python -c "import fastapi; print('FastAPI Installed Successfully')"
+      - name: Deploy to Hugging Face Spaces
+        if: success()
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          git config --global user.email "ci-bot@example.com"
+          git config --global user.name "CI Bot"
+          git push https://huggingface.co/spaces/<your-username>/<your-space> main

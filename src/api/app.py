@@ -10,10 +10,14 @@ app = FastAPI(
 )
 
 # Load trained pipeline
-# model_path = Path(__file__).resolve().parents[2] / "models" / "fraud_pipeline.pkl"
-model = mlflow.pyfunc.load_model(
-    model_uri="models:/credit_fraud_detector/Production"
-)
+models_dir = Path(__file__).resolve().parents[2] / "models"
+latest_model = sorted(models_dir.glob("fraud_pipeline_v*.pkl"))[-1]
+model = joblib.load(latest_model)
+# model_path = Path(__file__).resolve().parents[2] / "models" / "fraud_pipeline_v1.pkl"
+# model = joblib.load(model_path)
+# model = mlflow.pyfunc.load_model(
+#     model_uri="models:/credit_fraud_detector/Production"
+# )
 
 @app.post("/predict")
 def predict(data: dict):
