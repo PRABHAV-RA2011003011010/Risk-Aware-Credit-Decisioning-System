@@ -15,19 +15,16 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Conda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          activate-environment: credit_fraud_detection
-          environment-file: environment.yml
-          auto-activate-base: false
+          python-version: "3.10"
 
       - name: Install Dependencies
-        shell: bash -l {0}
         run: |
+          pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-cov
 
       - name: Run Tests
-        shell: bash -l {0}
         run: pytest tests/ --disable-warnings -v --cov=src
