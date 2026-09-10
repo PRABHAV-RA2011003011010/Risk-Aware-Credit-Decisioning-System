@@ -1,5 +1,9 @@
 # Risk-Aware-Credit-Decisioning-System
 
+![CI](https://github.com/PRABHAV-RA2011003011010/Risk-Aware-Credit-Decisioning-System/actions/workflows/ci.yml/badge.svg)
+
+A FastAPI-based fraud detection API with CI/CD and automated testing.
+
 conda activate credit_fraud_detection
 uvicorn src.api.app:app --reload
 Test Predict API:
